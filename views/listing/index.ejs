@@ -1,0 +1,175 @@
+<% layout("/layouts/boilerplate") %>
+
+        <style>
+            #filters{
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+            .filter{
+            text-align: center;
+            margin-right: 2rem;
+            margin-top: 2rem;
+            opacity: 0.7;
+            }
+            .filter:hover{
+                opacity: 1;
+                cursor: pointer;
+            }
+            .filter i {
+            font-size: 1.5rem;
+               }
+            /* Responsive Behavior */
+            .filter {
+                display: none; /* hide all by default */
+            }
+            .filter.visible {
+                display: block;
+            }
+            #moreFilters {
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: underline;
+            color: #007bff;
+    }
+             @media (min-width: 768px) {
+           .filter {
+             display: block !important;
+            }
+
+           #moreFilters {
+             display: none;
+            }
+          }
+    .tax-info{
+        display: none;
+    }
+    .tax-toggle{
+        border: 1px solid black;
+        border-radius: 0.8rem;
+        height: 3rem;
+        padding: 1rem;
+        margin-left: 1rem;
+       
+    }
+</style>
+        </style>
+
+        <div id="filters">
+            <!-- <p id="moreFilters" class="mt-2">Show more filters</p> -->
+
+            <div class="filter">
+              <div> <i class="fa-solid fa-fire"></i> </div> 
+               <p> Trending</p>
+            </div>
+            <div class="filter">
+              <div><i class="fa-solid fa-bed"></i></div> 
+               <p> Rooms</p>
+               </div>
+               <div class="filter">
+              <div> <i class="fa-solid fa-mountain-city"></i></div> 
+               <p> Iconic cities</p>
+            </div>
+            <div class="filter">
+              <div><i class="fa-solid fa-mountain-sun"></i></div> 
+               <p> Mountains</p>
+            </div>
+             <div class="filter">
+              <div><i class="fa-brands fa-fort-awesome"></i></div> 
+               <p> Castles</p>
+            </div>
+            <div class="filter">
+              <div><i class="fa-solid fa-person-swimming"></i></div> 
+               <p> Amazing Pools</p>
+            </div>
+            <div class="filter">
+              <div><i class="fa-solid fa-campground"></i></div> 
+               <p> Camping</p>
+            </div>
+             <div class="filter">
+              <div><i class="fa-solid fa-cow"></i></div> 
+               <p> Farms</p>
+            </div>
+            <div class="filter">
+              <div><i class="fa-solid fa-snowflake"></i></div> 
+               <p>Arctic</p>
+            </div>
+             <div class="filter">
+              <div><i class="fa-solid fa-igloo"></i></div> 
+               <p> Domes</p>
+            </div>
+            <div class="filter">
+              <div><i class="fa-solid fa-ship"></i></div> 
+               <p>Boats</p>
+            </div>
+            <div class="tax-toggle">
+                <div class="form-check-reverse form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+                    <label class="form-check-label" for="switchCheckDefault">Display total after taxes</label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3" >
+            <% for(listing of allListing) {%>
+                <a href="/listing/<%= listing._id %>" class="listing-link">
+                    <div class="card col listing-card"  >
+                   <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=60' %>" 
+                     class="card-img-top"
+                      alt="listing_image" 
+                    style="height: 20rem">
+                     <div class="card-img-overlay"></div>
+                    <div class="card-body">
+                    <p class="card-text">
+                    <b><%= listing.title %></b> <br>
+                    &#8377; <%= listing.price.toLocaleString("en-IN") %>/night
+                      <i class="tax-info">&nbsp; +18%GST</i>  </p>
+                    </div>
+                </div>
+                </a>
+                
+                <%} %>
+        </div>
+
+        <% if (country && country.trim() !=="" ) { %>
+            <h4>Showing listings for "<%= country %>"</h4>
+            <% } %>
+        
+                <% if (allListing.length===0) { %>
+                    <p>No listings found for "<%= country %>".</p>
+                    <% } %>
+
+
+     <script>
+    const moreBtn = document.getElementById("moreFilters");
+    const allFilters = document.querySelectorAll("#filters .filter");
+    let expanded = false;
+
+    // 👉 Show first 4 filters by default on mobile
+    function initializeFilters() {
+        if (window.innerWidth < 768) {
+            allFilters.forEach((filter, index) => {
+                if (index < 4) {
+                    filter.classList.add("visible");
+                }
+            });
+        }
+    }
+
+    initializeFilters(); 
+
+   
+    // Just for your tax switch
+    let taxswitch = document.getElementById("switchCheckDefault");
+    taxswitch.addEventListener("click", () => {
+       let taxInfo=document.getElementsByClassName("tax-info");
+       for (info of taxInfo){
+        if(info.style.display != "inline"){
+            info.style.display= "inline";
+        }else{
+            info.style.display="none";
+        }
+       }
+    });
+</script>
